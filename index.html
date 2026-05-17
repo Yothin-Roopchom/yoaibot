@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yo AI Bot — LINE Chatbot สำหรับ SME</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,'Noto Sans Thai',sans-serif;background:#0F1923;color:#F1EFE8;}
+nav{background:#0F6E56;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo{font-size:20px;font-weight:700;color:#fff;}.logo span{color:#9FE1CB;}
+.nav-links{display:flex;gap:24px;}.nav-links a{font-size:13px;color:rgba(255,255,255,0.85);text-decoration:none;}
+.nav-links a:hover{color:#fff;}
+.hero{background:#0F1923;padding:64px 32px;text-align:center;}
+.hero-tag{display:inline-block;background:rgba(29,158,117,0.2);color:#5DCAA5;font-size:12px;padding:5px 16px;border-radius:20px;margin-bottom:18px;border:1px solid #1D9E75;}
+.hero h1{font-size:42px;font-weight:700;line-height:1.3;margin-bottom:12px;}.hero h1 span{color:#5DCAA5;}
+.hero p{font-size:16px;color:#888780;margin-bottom:32px;line-height:1.8;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-g{background:#1D9E75;color:#fff;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;}
+.btn-g:hover{background:#0F6E56;}
+.btn-o{background:transparent;color:#5DCAA5;border:2px solid #1D9E75;border-radius:10px;padding:14px 32px;font-size:15px;cursor:pointer;text-decoration:none;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:#1A2530;border-top:1px solid #2C3A45;}
+.stat{padding:24px;text-align:center;border-right:1px solid #2C3A45;}.stat:last-child{border-right:none;}
+.stat-num{font-size:28px;font-weight:700;color:#5DCAA5;margin-bottom:4px;}.stat-label{font-size:13px;color:#888780;}
+.sec{padding:60px 32px;max-width:1100px;margin:0 auto;}
+.sec-tag{display:inline-block;background:rgba(29,158,117,0.1);color:#0F6E56;font-size:12px;padding:4px 14px;border-radius:20px;margin-bottom:10px;border:1px solid rgba(29,158,117,0.3);}
+.sec-title{font-size:28px;font-weight:700;color:#F1EFE8;margin-bottom:6px;text-align:center;}
+.sec-sub{font-size:14px;color:#888780;text-align:center;margin-bottom:32px;}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
+.svc{background:#1A2530;border:1px solid #2C3A45;border-radius:14px;padding:20px 16px;text-align:center;}
+.svc-icon{font-size:32px;margin-bottom:10px;}
+.svc-name{font-size:15px;font-weight:700;color:#F1EFE8;margin-bottom:6px;}
+.svc-desc{font-size:12px;color:#888780;line-height:1.6;}
+.sec-dark{background:#111D26;}
+.plans4{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+.plan{background:#1A2530;border:1px solid #2C3A45;border-radius:14px;padding:18px 14px;position:relative;}
+.plan.hot{border:2px solid #1D9E75;}
+.pbadge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#1D9E75;color:#fff;font-size:11px;padding:3px 14px;border-radius:20px;white-space:nowrap;font-weight:700;}
+.pname{font-size:12px;color:#5DCAA5;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.pprice{font-size:24px;font-weight:700;color:#F1EFE8;margin-bottom:4px;}.pprice span{font-size:12px;font-weight:400;color:#888780;}
+.pinst{font-size:12px;color:#888780;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #2C3A45;}
+.pfeat{list-style:none;padding:0;}.pfeat li{font-size:12px;color:#D3D1C7;padding:4px 0;display:flex;gap:6px;}
+.pfeat li::before{content:"✓";color:#1D9E75;font-weight:700;flex-shrink:0;}
+.pfeat li.no::before{content:"✗";color:#3A4A52;}
+.pfeat li.no{color:#5F5E5A;}
+.plans3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px;}
+.bundle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:20px;}
+.bundle{background:#1A2530;border:1px solid #2C3A45;border-radius:14px;padding:18px;}
+.bundle.sp{border:2px solid #1D9E75;background:#0F2A20;}
+.b-tag{font-size:11px;color:#5DCAA5;margin-bottom:6px;text-transform:uppercase;font-weight:700;}
+.b-name{font-size:16px;font-weight:700;color:#F1EFE8;margin-bottom:6px;}
+.b-price{font-size:24px;font-weight:700;color:#1D9E75;margin-bottom:8px;}.b-price span{font-size:12px;font-weight:400;color:#888780;}
+.b-items{font-size:13px;color:#888780;line-height:2;}
+.b-items li{list-style:none;padding-left:16px;position:relative;}
+.b-items li::before{content:"•";color:#1D9E75;position:absolute;left:0;}
+.addon-t{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;}
+.addon-t th{background:#1D9E75;color:#fff;font-size:14px;padding:12px 16px;text-align:left;}
+.addon-t th:last-child{text-align:right;}
+.addon-t td{font-size:13px;padding:12px 16px;border-bottom:1px solid #2C3A45;color:#D3D1C7;}
+.addon-t tr:nth-child(even) td{background:#1A2530;}
+.pc{color:#5DCAA5;font-weight:700;text-align:right;}
+.reviews{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.rev{background:#1A2530;border:1px solid #2C3A45;border-radius:14px;padding:18px;}
+.rev-stars{color:#1D9E75;font-size:14px;margin-bottom:8px;}
+.rev-text{font-size:13px;color:#888780;line-height:1.8;margin-bottom:14px;}
+.rev-author{display:flex;align-items:center;gap:10px;}
+.rev-av{width:36px;height:36px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.rev-name{font-size:13px;font-weight:700;color:#F1EFE8;}
+.rev-biz{font-size:12px;color:#888780;}
+.cta-bar{background:#0F6E56;padding:60px 32px;text-align:center;}
+.cta-bar h3{font-size:28px;font-weight:700;color:#fff;margin-bottom:10px;}
+.cta-bar p{font-size:14px;color:rgba(255,255,255,0.75);margin-bottom:28px;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.c-btn{background:#fff;color:#0F6E56;border:none;border-radius:10px;padding:14px 28px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;}
+.c-out{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.5);border-radius:10px;padding:14px 28px;font-size:14px;text-decoration:none;}
+footer{background:#0A1510;padding:24px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.f-logo{font-size:16px;font-weight:700;color:#5DCAA5;}
+.f-text{font-size:12px;color:#5F5E5A;}
+.note-box{background:#1A2530;border-radius:10px;padding:14px 18px;font-size:13px;color:#888780;line-height:1.9;margin-top:18px;}
+@media(max-width:600px){
+  .hero h1{font-size:28px;}
+  nav{flex-direction:column;gap:10px;}
+  .nav-links{flex-wrap:wrap;gap:12px;}
+  .stats{grid-template-columns:1fr;}
+  .stat{border-right:none;border-bottom:1px solid #2C3A45;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Yo <span>AI</span> Bot</div>
+  <div class="nav-links">
+    <a href="#services">บริการ</a>
+    <a href="#chatbot">Chatbot</a>
+    <a href="#website">เว็บไซต์</a>
+    <a href="#contact">ติดต่อ</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">AI Powered · พร้อมใช้งานทันที</div>
+  <h1>ให้ <span>AI ตอบลูกค้า</span><br>แทนคุณ ตลอด 24 ชั่วโมง</h1>
+  <p>รับทำ LINE Chatbot + เว็บไซต์ ครบวงจร สำหรับ SME อุบลราชธานี<br>เริ่มต้นเพียง 650 บาท/เดือน</p>
+  <div class="hero-btns">
+    <a class="btn-g" href="#chatbot">ดูแพ็กเกจและราคา</a>
+    <a class="btn-o" href="https://line.me/R/ti/p/@330jvgox" target="_blank">ทดลองใช้ฟรี 7 วัน</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">ตอบได้ตลอดเวลา</div></div>
+  <div class="stat"><div class="stat-num">&lt; 1 วัน</div><div class="stat-label">ติดตั้งพร้อมใช้</div></div>
+  <div class="stat"><div class="stat-num">650 บาท</div><div class="stat-label">เริ่มต้นต่อเดือน</div></div>
+</div>
+
+<div style="background:#111D26;">
+<div class="sec" id="services">
+  <div style="text-align:center;"><span class="sec-tag">บริการของเรา</span></div>
+  <div class="sec-title">เหมาะสำหรับธุรกิจไหนบ้าง</div>
+  <div class="sec-sub">รองรับทุกประเภทธุรกิจ SME อุบลราชธานี</div>
+  <div class="svc-grid">
+    <div class="svc"><div class="svc-icon">🍜</div><div class="svc-name">ร้านอาหาร</div><div class="svc-desc">ตอบเมนู ราคา เวลาเปิดปิด รับจองโต๊ะ แจ้งโปรโมชั่น</div></div>
+    <div class="svc"><div class="svc-icon">🏥</div><div class="svc-name">คลินิก</div><div class="svc-desc">นัดหมอ ถามอาการเบื้องต้น บอกค่าบริการ แจ้งเตือนนัด</div></div>
+    <div class="svc"><div class="svc-icon">✂️</div><div class="svc-name">ร้านตัดผม</div><div class="svc-desc">จองคิว บอกราคาทรงผม แจ้งคิวว่าง ส่งโปรโมชั่น</div></div>
+    <div class="svc"><div class="svc-icon">🛍️</div><div class="svc-name">ร้านออนไลน์</div><div class="svc-desc">เช็คสินค้า ติดตามพัสดุ ตอบคำถามสินค้า รับออเดอร์</div></div>
+    <div class="svc"><div class="svc-icon">🏢</div><div class="svc-name">อสังหาริมทรัพย์</div><div class="svc-desc">แนะนำโครงการ นัดชม ตอบราคา เงินดาวน์</div></div>
+    <div class="svc"><div class="svc-icon">💆</div><div class="svc-name">ความงาม / สปา</div><div class="svc-desc">จองคิว แนะนำบริการ บอกราคา แจ้งโปรโมชั่น</div></div>
+  </div>
+</div>
+</div>
+
+<div style="background:#0F1923;">
+<div class="sec" id="chatbot">
+  <div style="text-align:center;"><span class="sec-tag">LINE Chatbot</span></div>
+  <div class="sec-title">แพ็กเกจ LINE Chatbot</div>
+  <div class="sec-sub">เลือกแพ็กเกจที่เหมาะกับธุรกิจของคุณ</div>
+  <div class="plans4">
+    <div class="plan">
+      <div class="pname">ทดลองใช้</div>
+      <div class="pprice">300 <span>บาท</span></div>
+      <div class="pinst">ใช้ได้ 7 วัน</div>
+      <ul class="pfeat">
+        <li>ตอบคำถามอัตโนมัติ</li>
+        <li>ทดลองก่อนตัดสินใจ</li>
+        <li class="no">เฉพาะเวลาทำการ</li>
+        <li class="no">ไม่จำประวัติ</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="pname">Basic</div>
+      <div class="pprice">650 <span>บาท/เดือน</span></div>
+      <div class="pinst">ติดตั้ง 1,500 บาท</div>
+      <ul class="pfeat">
+        <li>ตอบ 24 ชั่วโมง</li>
+        <li>ตอบอัตโนมัติ</li>
+        <li class="no">ไม่จำประวัติ</li>
+        <li class="no">ไม่ปรับแต่งบุคลิก</li>
+      </ul>
+    </div>
+    <div class="plan hot">
+      <div class="pbadge">แนะนำ</div>
+      <div class="pname">Standard</div>
+      <div class="pprice">850 <span>บาท/เดือน</span></div>
+      <div class="pinst">ติดตั้ง 2,000 บาท</div>
+      <ul class="pfeat">
+        <li>ทุกอย่างใน Basic</li>
+        <li>จำประวัติการสนทนา</li>
+        <li>Bot รู้จักลูกค้าประจำ</li>
+        <li class="no">ไม่ปรับแต่งบุคลิก</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="pname">Premium</div>
+      <div class="pprice">1,650 <span>บาท/เดือน</span></div>
+      <div class="pinst">ติดตั้ง 3,000 บาท</div>
+      <ul class="pfeat">
+        <li>ทุกอย่างใน Standard</li>
+        <li>ปรับชื่อและบุคลิก Bot</li>
+        <li>ใส่เมนู/สินค้าของร้าน</li>
+        <li>รายงานสถิติรายเดือน</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<div style="background:#111D26;">
+<div class="sec" id="website">
+  <div style="text-align:center;"><span class="sec-tag">เว็บไซต์</span></div>
+  <div class="sec-title">แพ็กเกจเว็บไซต์</div>
+  <div class="sec-sub">เว็บไซต์สวยงาม รองรับมือถือ พร้อม Chatbot Widget</div>
+  <div class="plans3">
+    <div class="plan">
+      <div class="pname">Basic Web</div>
+      <div class="pprice">3,000 <span>บาท</span></div>
+      <div class="pinst">จ่ายครั้งเดียว</div>
+      <ul class="pfeat">
+        <li>หน้าแสดงข้อมูลร้าน</li>
+        <li>เมนู / สินค้า / ราคา</li>
+        <li>แผนที่และติดต่อ</li>
+        <li>รองรับมือถือ</li>
+      </ul>
+    </div>
+    <div class="plan hot">
+      <div class="pbadge">แนะนำ</div>
+      <div class="pname">Standard Web</div>
+      <div class="pprice">5,000 <span>บาท</span></div>
+      <div class="pinst">จ่ายครั้งเดียว</div>
+      <ul class="pfeat">
+        <li>ทุกอย่างใน Basic</li>
+        <li>ระบบจองออนไลน์</li>
+        <li>แกลเลอรี่รูปภาพ</li>
+        <li>SEO เบื้องต้น</li>
+        <li>Web Chatbot Widget</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="pname">Premium Web</div>
+      <div class="pprice">8,000 <span>บาท</span></div>
+      <div class="pinst">จ่ายครั้งเดียว</div>
+      <ul class="pfeat">
+        <li>ทุกอย่างใน Standard</li>
+        <li>ระบบสมาชิก/ล็อกอิน</li>
+        <li>ตะกร้าสินค้า</li>
+        <li>ชำระเงินออนไลน์</li>
+        <li>แดชบอร์ดจัดการ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-bottom:14px;"><span class="sec-tag">Bundle Deal — ประหยัดกว่าซื้อแยก 20-30%</span></div>
+  <div class="bundle-grid">
+    <div class="bundle">
+      <div class="b-tag">Starter Bundle</div>
+      <div class="b-name">เว็บ + LINE Bot</div>
+      <div class="b-price">4,500 <span>บาท (ติดตั้ง)</span></div>
+      <ul class="b-items"><li>เว็บไซต์ Basic</li><li>LINE Bot Basic</li><li>ดูแลรายเดือน 800 บาท</li></ul>
+    </div>
+    <div class="bundle sp">
+      <div class="b-tag">⭐ Best Value</div>
+      <div class="b-name">เว็บ + LINE + Web Chat</div>
+      <div class="b-price">7,500 <span>บาท (ติดตั้ง)</span></div>
+      <ul class="b-items"><li>เว็บไซต์ Standard</li><li>LINE Bot Standard</li><li>Web Chatbot Widget</li><li>ดูแลรายเดือน 1,200 บาท</li></ul>
+    </div>
+    <div class="bundle">
+      <div class="b-tag">Pro Bundle</div>
+      <div class="b-name">เว็บ Premium + ครบทุกอย่าง</div>
+      <div class="b-price">11,000 <span>บาท (ติดตั้ง)</span></div>
+      <ul class="b-items"><li>เว็บไซต์ Premium</li><li>LINE Bot Premium</li><li>Web + Facebook Chatbot</li><li>ดูแลรายเดือน 2,000 บาท</li></ul>
+    </div>
+    <div class="bundle">
+      <div class="b-tag">ค่าดูแลรายเดือน</div>
+      <div class="b-name">Maintenance</div>
+      <div class="b-price">500+ <span>บาท/เดือน</span></div>
+      <ul class="b-items"><li>อัปเดตข้อมูลเว็บ</li><li>ดูแล Bot</li><li>แก้ไขปัญหา</li><li>รายงานสถิติ</li></ul>
+    </div>
+  </div>
+
+  <div style="margin-bottom:14px;"><span class="sec-tag">บริการเสริมเว็บไซต์</span></div>
+  <table class="addon-t">
+    <tr><th>บริการ</th><th>ราคา</th></tr>
+    <tr><td>อัปเดตเนื้อหา / รูปภาพ</td><td class="pc">200 บาท/ครั้ง</td></tr>
+    <tr><td>เพิ่มหน้าใหม่</td><td class="pc">500 บาท/หน้า</td></tr>
+    <tr><td>เชื่อมต่อโซเชียลมีเดีย</td><td class="pc">500 บาท</td></tr>
+    <tr><td>ระบบจองออนไลน์ (เพิ่มเติม)</td><td class="pc">1,500 บาท</td></tr>
+    <tr><td>งานด่วน (ภายใน 24 ชม.)</td><td class="pc">+50% ราคาปกติ</td></tr>
+  </table>
+  <div class="note-box">📋 ราคาติดตั้งจ่ายครั้งเดียว · ค่าดูแลรายเดือนจ่ายต่อเนื่อง · Bundle ประหยัดกว่าซื้อแยก 20-30% · ราคายังไม่รวม VAT 7% · โดเมนและโฮสติ้งลูกค้าจัดหาเองหรือให้โยจัดหาให้ได้</div>
+</div>
+</div>
+
+<div style="background:#0F1923;">
+<div class="sec">
+  <div class="sec-title">ลูกค้าพูดถึงเรา</div>
+  <div class="sec-sub">ความประทับใจจากลูกค้าจริง</div>
+  <div class="reviews">
+    <div class="rev"><div class="rev-stars">★★★★★</div><div class="rev-text">"Bot ตอบลูกค้าได้ดีมากครับ ตอนดึกก็ตอบได้ทันที ไม่พลาดออเดอร์แม้แต่รายเดียวเลย"</div><div class="rev-author"><div class="rev-av">ส</div><div><div class="rev-name">คุณสมชาย</div><div class="rev-biz">ร้านอาหารอีสาน อุบลฯ</div></div></div></div>
+    <div class="rev"><div class="rev-stars">★★★★★</div><div class="rev-text">"ราคาถูกมากเมื่อเทียบกับที่อื่น Bot ฉลาดและตอบดีมาก ลูกค้าประทับใจมากขึ้นเยอะเลยครับ"</div><div class="rev-author"><div class="rev-av">น</div><div><div class="rev-name">คุณนภา</div><div class="rev-biz">คลินิกความงาม</div></div></div></div>
+    <div class="rev"><div class="rev-stars">★★★★★</div><div class="rev-text">"ติดตั้งง่าย คุณโยดูแลดีมาก มีปัญหาก็แก้ให้เร็วมาก แนะนำสำหรับทุกร้านที่อยากมี Bot ครับ"</div><div class="rev-author"><div class="rev-av">พ</div><div><div class="rev-name">คุณพิชัย</div><div class="rev-biz">ร้านตัดผม</div></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="cta-bar" id="contact">
+  <h3>พร้อมเริ่มต้นแล้วหรือยัง?</h3>
+  <p>ทดลองใช้ฟรี 7 วัน ไม่มีสัญญาผูกมัด ยกเลิกได้ทุกเมื่อ</p>
+  <div class="cta-btns">
+    <a class="c-btn" href="https://line.me/R/ti/p/@330jvgox" target="_blank">สมัครใช้บริการ</a>
+    <a class="c-out" href="https://line.me/R/ti/p/@330jvgox" target="_blank">LINE: @330jvgox</a>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Yo AI Bot</div>
+  <div class="f-text">LINE: @330jvgox · คุณโย · อุบลราชธานี · © 2025</div>
+</footer>
+
+</body>
+</html>
