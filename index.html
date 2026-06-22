@@ -388,10 +388,14 @@ footer{background:#0A1510;padding:24px 32px;display:flex;justify-content:space-b
       input=document.getElementById('yo-input'),
       send=document.getElementById('yo-send');
   function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+  function fmt(s){
+    var h=esc(s).replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+    return h.split('\n').map(function(line){return line.replace(/^\s*[-*]\s+/,'• ');}).join('<br>');
+  }
   function add(text,who){
     var el=document.createElement('div');
     el.className='yo-m '+(who==='user'?'yo-user':'yo-bot');
-    el.innerHTML=esc(text);
+    el.innerHTML=who==='bot'?fmt(text):esc(text);
     msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;return el;
   }
   function open(){
